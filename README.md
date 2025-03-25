@@ -49,6 +49,8 @@ A web application to manage room bookings for specified time slots. Users can se
 ```bash
 git clone https://github.com/your-username/room-booking-system.git
 cd room-booking-system
+```bash
+
 
 2. **Install dependencies:**
 
