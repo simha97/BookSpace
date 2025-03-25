@@ -49,14 +49,13 @@ A web application to manage room bookings for specified time slots. Users can se
 ```bash
 git clone https://github.com/your-username/room-booking-system.git
 cd room-booking-system
-```bash
-
+```
 
 2. **Install dependencies:**
 
 ```bash
 npm install
-
+```
 3. **Setup Supabase:**
 
 - Create a Supabase project if you don't have one.
@@ -71,7 +70,7 @@ Navigate to your backend folder (if separate) and run:
 
 ```bash
 node server.js
-
+```
 This will start the backend on your local machine.
 
 5. **Start the frontend:**
@@ -80,6 +79,6 @@ From the root directory of the project:
 
 ```bash
 npm run dev
-
+```
 This will start the frontend development server, and the app will be accessible at http://localhost:3000.
 
