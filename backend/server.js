@@ -9,7 +9,7 @@ const app = express();
 const port = 5000;
 const allowedOrigins = [
 	"http://localhost:3000",
-  "https://book-space2.vercel.app/", 
+  "https://book-space2.vercel.app", 
 ];
 
 app.use(
