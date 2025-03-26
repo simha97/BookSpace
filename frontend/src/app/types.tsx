@@ -11,4 +11,5 @@ export type Booking = {
   date: string;
   slot: string;
   booked_by: string;
+  room_name?: string;
 };

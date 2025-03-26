@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Room } from "../types";
 import { ChevronUpDownIcon, CheckIcon } from "@heroicons/react/20/solid";
 
@@ -14,6 +14,7 @@ const FilterMenu = ({
   setSelectedRooms,
 }: FilterMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null); // to close the menu when clicking outside
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
   const deselectAll = () => setSelectedRooms([]);
@@ -25,12 +26,31 @@ const FilterMenu = ({
         : [...prevSelected, roomId]
     );
   };
-  console.log(selectedRooms);
+
+  //useEffect to listen to click outside the menu and change the html element
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   return (
-    <div className="relative w-60 mb-5">
+    <div className="relative w-60 mb-5" ref={menuRef}>
       <button
-        className="flex w-full items-center justify-between rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 shadow-sm outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm"
+        role="combobox"
+        aria-expanded={isOpen}
+        aria-controls="room-filter-list"
+        className="flex w-full items-center justify-between rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 shadow-sm outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-sky-800 sm:text-sm"
         onClick={toggleMenu}
       >
         <span>
@@ -42,11 +62,19 @@ const FilterMenu = ({
       </button>
 
       {isOpen && (
-        <div className="absolute mt-1 w-full overflow-auto rounded-md bg-white py-1  ring-3 shadow-2xl ring-black/5 text-sm">
+        <div
+          className="absolute mt-1 w-full overflow-auto rounded-md bg-white py-1  ring-3 shadow-2xl ring-black/5 text-sm"
+          id="room-filter-list"
+          role="listbox"
+        >
           {rooms.map((room) => (
             <div
               key={room.id}
-              className="group relative flex cursor-default items-center py-2 pr-9 pl-3 text-gray-900 select-none hover:bg-indigo-300 hover:text-white"
+              className="group relative flex cursor-default items-center py-2 pr-9 pl-3 text-sky-800 select-none hover:bg-sky-800 hover:text-white"
+              role="option"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && handleSelectRoom(room.id)}
+              aria-selected={selectedRooms.includes(room.id)}
               onClick={() => handleSelectRoom(room.id)}
             >
               <span
@@ -62,12 +90,17 @@ const FilterMenu = ({
             </div>
           ))}
           <div className="flex justify-between mt-2 px-3 py-2 border-t border-gray-300">
-            <button className="text-sm text-red-500" onClick={deselectAll}>
+            <button
+              className="text-sm text-red-500"
+              onClick={deselectAll}
+              aria-label="Deselect all filters"
+            >
               Deselect All
             </button>
             <button
-              className="bg-blue-500 text-white py-1 px-4 rounded-md text-sm"
+              className="bg-sky-800 text-white py-1 px-4 rounded-md text-sm"
               onClick={toggleMenu}
+              aria-label="Close filter menu"
             >
               Close
             </button>

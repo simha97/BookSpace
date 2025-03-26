@@ -7,9 +7,22 @@ const bookingsRoutes = require('./routes/bookings');
 
 const app = express();
 const port = 5000;
+const allowedOrigins = [
+	"http://localhost:3000",
+  "https://your-frontend.vercel.app", // replace with actual domain
+];
 
-app.use(cors());
-app.use(express.json());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
+);app.use(express.json());
 
 app.use('/rooms', roomsRoutes);
 app.use('/bookings', bookingsRoutes);

@@ -14,6 +14,13 @@ const SlotCard = ({ room, onSelect, isSelected }: SlotCardProps) => {
         isSelected ? "bg-blue-300" : "bg-blue-100"
       }`}
       onClick={onSelect}
+      role="button"
+      tabIndex={0}
+      aria-pressed={isSelected}
+      aria-label={`Select ${room.name}, capacity ${room.capacity}`}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onSelect();
+      }}
     >
       <div
         className="w-2 h-full rounded-tl-[4px] rounded-bl-[4px]"
